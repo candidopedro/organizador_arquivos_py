@@ -14,14 +14,6 @@ RESET = '\033[0m'
 AZUL = '\033[34m'
 VERDE = "\033[92m"
 
-def nome_arquivo(self, arquivo):
-    if len(arquivo.name) == 9 and len(Path(arquivo.name).suffix) == 4:
-        print(f'│ 📄 {Path(arquivo.name).stem[:9]}[..]{Path(arquivo.name).suffix} {1 * " "}│') # diminuir pelo tamanho do suffix maior (valor padrão - valor do suffix maior) - DIFERENÇA
-    elif len(arquivo.name) < 9 and len(Path(arquivo.name).suffix) == 4:
-        print(f'│ 📄 {(arquivo.name[:9]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
-    else:
-        print(f'│ 📄 {(arquivo.name[:9 - (len(Path(arquivo.name).suffix)-4)]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
-
 os.get_terminal_size = lambda: os.terminal_size((100, 20))  # Define o tamanho do terminal como 100x20
 tamanho_terminal = lambda: os.get_terminal_size().columns  # Função para obter 
     
@@ -84,6 +76,9 @@ class Organizador:
 
     def tipo_de_arquivo(self, arquivo):
         return Path(arquivo).suffix
+
+    def nome_arquivo(self, arquivo):
+        pass
         
     def organizar(self):# Lógica para organizar os arquivos na pasta de downloads
         usuario = Organizador.identificar_usuario(self)
@@ -96,7 +91,12 @@ class Organizador:
         Interface.barra_de_organizacao(None)
 
         for arquivo in arquivos: # Definindo o tamanho do nome do arquivo, para que não ultrapasse o tamanho da interface
-            print(f'{Organizador.nome_arquivo(self, arquivo)}')
+            if len(arquivo.name) == 9 and len(Path(arquivo.name).suffix) == 4:
+                print(f'│ 📄 {Path(arquivo.name).stem[:9]}[..]{Path(arquivo.name).suffix} {1 * " "}│{Organizador.tamanho_arquivo(self, arquivo)}│{Organizador.data_criacao_arquivo(self, arquivo)}│{Organizador.data_modificacao_arquivo(self, arquivo)}│') # diminuir pelo tamanho do suffix maior (valor padrão - valor do suffix maior) - DIFERENÇA
+            elif len(arquivo.name) > 9 and len(Path(arquivo.name).suffix) == 4:
+                print(f'│ 📄 {(arquivo.name[:9]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│{Organizador.tamanho_arquivo(self, arquivo)}│{Organizador.data_criacao_arquivo(self, arquivo)}│{Organizador.data_modificacao_arquivo(self, arquivo)}│')
+            elif len(Path(arquivo.name).stem) < 9: # Uso parcial (+4 NÃO funciona em todos os casos) - (SOLUÇÃO: COLOCAR O NOME GRANDE(com espaços) E LIMITAR A [:9])
+                print(f'│ 📄 {Path(arquivo.name[:9]).stem + Path(arquivo.name).suffix} {(len(arquivo.name)+4) * " "}│{Organizador.tamanho_arquivo(self, arquivo)}│{Organizador.data_criacao_arquivo(self, arquivo)}│{Organizador.data_modificacao_arquivo(self, arquivo)}│')
             
         Interface.part_inferior(None, cor = None)
 
