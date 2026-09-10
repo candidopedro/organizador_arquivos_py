@@ -14,6 +14,14 @@ RESET = '\033[0m'
 AZUL = '\033[34m'
 VERDE = "\033[92m"
 
+def nome_arquivo(self, arquivo):
+    if len(arquivo.name) == 9 and len(Path(arquivo.name).suffix) == 4:
+        print(f'│ 📄 {Path(arquivo.name).stem[:9]}[..]{Path(arquivo.name).suffix} {1 * " "}│') # diminuir pelo tamanho do suffix maior (valor padrão - valor do suffix maior) - DIFERENÇA
+    elif len(arquivo.name) < 9 and len(Path(arquivo.name).suffix) == 4:
+        print(f'│ 📄 {(arquivo.name[:9]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
+    else:
+        print(f'│ 📄 {(arquivo.name[:9 - (len(Path(arquivo.name).suffix)-4)]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
+
 os.get_terminal_size = lambda: os.terminal_size((100, 20))  # Define o tamanho do terminal como 100x20
 tamanho_terminal = lambda: os.get_terminal_size().columns  # Função para obter 
     
@@ -51,12 +59,6 @@ class Interface:
 class Organizador:
     def __init__(self, organizar_por):
         self.organizar_por = organizar_por
-
-    def nome_arquivo(self, arquivo):
-        if len(Path(arquivo).suffix) == 4:
-            return print(f'│ 📄 {((Path(arquivo).stem) + (10 * " "))[:9] + "[..]" + Path(arquivo).suffix} {1 * " "}')
-        if len(Path(arquivo).suffix) > 4:
-            return print(f'│ 📄 {(arquivo[:9 - (len(Path(arquivo).suffix)-4)]) + "[..]" + Path(arquivo).suffix} {1 * " "}')
         
     def tamanho_arquivo(self, arquivo): # TAMANHO - MB & GB (até o momento..)
         if len(str(os.path.getsize(arquivo))) >= 10:
@@ -94,9 +96,7 @@ class Organizador:
         Interface.barra_de_organizacao(None)
 
         for arquivo in arquivos: # Definindo o tamanho do nome do arquivo, para que não ultrapasse o tamanho da interface
-            print(
-                f'{Organizador.nome_arquivo(self, arquivo.name)}│{Organizador.tamanho_arquivo(self, arquivo.path)}│{Organizador.data_criacao_arquivo(self, Path(arquivo.path))}{Organizador.data_modificacao_arquivo(self, arquivo.path)}│{Organizador.tipo_de_arquivo(self, arquivo.name)}'
-                )
+            print(f'{Organizador.nome_arquivo(self, arquivo)}')
             
         Interface.part_inferior(None, cor = None)
 
