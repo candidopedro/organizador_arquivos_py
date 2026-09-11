@@ -51,34 +51,46 @@ class Interface:
 class Organizador:
     def __init__(self, organizar_por):
         self.organizar_por = organizar_por
-        
+
+    # Nome
+    def nome_arquivo(self, arquivo):
+        if len(Path(arquivo.name).stem) > 9 and len(Path(arquivo.name).suffix) > 4:
+            return (f'│ 📄 {(Path(arquivo.name).stem)[:(13-len(Path(arquivo.name).suffix))] + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
+        elif len(arquivo.name) == 9 and len(Path(arquivo.name).suffix) == 4:
+            return (f'│ 📄 {Path(arquivo.name).stem[:9]}[..]{Path(arquivo.name).suffix} {1 * " "}│') # diminuir pelo tamanho do suffix maior (valor padrão - valor do suffix maior) - DIFERENÇA
+        elif len(arquivo.name) > 9 and len(Path(arquivo.name).suffix) == 4:
+            return (f'│ 📄 {(arquivo.name[:9]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
+        else:
+           return (f'│ 📄 {((arquivo.name) + 25 * " ")[:19]}│')
+
+    # Tamanho   
     def tamanho_arquivo(self, arquivo): # TAMANHO - MB & GB (até o momento..)
         if len(str(os.path.getsize(arquivo))) >= 10:
-            return f'{2 * " "}{((os.path.getsize(arquivo))/ 1024 ** 3):.2f} GB{2 * " "}'
+            return f'{2 * " "}{((os.path.getsize(arquivo))/ 1024 ** 3):.2f} GB{2 * " "}│'
         elif len(str(os.path.getsize(arquivo))) == 8:
-            return f'{4 * " "}{((os.path.getsize(arquivo))/ 1024 ** 2):.0f} MB{2 * " "}'
+            return f'{4 * " "}{((os.path.getsize(arquivo))/ 1024 ** 2):.0f} MB{2 * " "}│'
         elif len(str(os.path.getsize(arquivo))) == 7:
-            return f'{2 * " "}{((os.path.getsize(arquivo))/ 1024 ** 2):.2f} MB{2 * " "}'
+            return f'{2 * " "}{((os.path.getsize(arquivo))/ 1024 ** 2):.2f} MB{2 * " "}│'
         else:
-            return f'{3 * " "}{((os.path.getsize(arquivo))/ 1024 ** 2):.1f} MB{2 * " "}'
+            return f'{3 * " "}{((os.path.getsize(arquivo))/ 1024 ** 2):.1f} MB{2 * " "}│'
 
+    # Data de Criação
     def data_criacao_arquivo(self, arquivo):
         timestamp_criacao = os.path.getctime(arquivo)
         data_criacao = datetime.datetime.fromtimestamp(timestamp_criacao)
         data_formatada = data_criacao.strftime("%d/%m/%Y %H:%M")
-        return f'{2 * " "}{((data_formatada))}{2 * " "}'
+        return f'{2 * " "}{((data_formatada))}{2 * " "}│'
 
+    # Data de Modificação
     def data_modificacao_arquivo(self,arquivo):
         timestamp_modificacao = os.path.getmtime(arquivo)
         data_modificacao = datetime.datetime.fromtimestamp(timestamp_modificacao)
         data_formatada = data_modificacao.strftime("%d/%m/%Y %H:%M")
-        return f'{4 * " "}{((data_formatada))}{3 * " "}'
+        return f'{3 * " "}{((data_formatada))}{3 * " "}│'
 
+    # Tipo de Arquivo
     def tipo_de_arquivo(self, arquivo):
-        return Path(arquivo).suffix
-
-    def nome_arquivo(self, arquivo):
-        pass
+        return f'{7 * " "}{((Path(arquivo).suffix) + (25 * " ")[:12-(len(Path(arquivo).suffix))])}│'
         
     def organizar(self):# Lógica para organizar os arquivos na pasta de downloads
         usuario = Organizador.identificar_usuario(self)
@@ -91,12 +103,9 @@ class Organizador:
         Interface.barra_de_organizacao(None)
 
         for arquivo in arquivos: # Definindo o tamanho do nome do arquivo, para que não ultrapasse o tamanho da interface
-            if len(arquivo.name) == 9 and len(Path(arquivo.name).suffix) == 4:
-                print(f'│ 📄 {Path(arquivo.name).stem[:9]}[..]{Path(arquivo.name).suffix} {1 * " "}│{Organizador.tamanho_arquivo(self, arquivo)}│{Organizador.data_criacao_arquivo(self, arquivo)}│{Organizador.data_modificacao_arquivo(self, arquivo)}│') # diminuir pelo tamanho do suffix maior (valor padrão - valor do suffix maior) - DIFERENÇA
-            elif len(arquivo.name) > 9 and len(Path(arquivo.name).suffix) == 4:
-                print(f'│ 📄 {(arquivo.name[:9]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│{Organizador.tamanho_arquivo(self, arquivo)}│{Organizador.data_criacao_arquivo(self, arquivo)}│{Organizador.data_modificacao_arquivo(self, arquivo)}│')
-            elif len(Path(arquivo.name).stem) < 9:
-                print(f'│ 📄 {((arquivo.name) + 25 * " ")[:19]}│{Organizador.tamanho_arquivo(self, arquivo)}│{Organizador.data_criacao_arquivo(self, arquivo)}│{Organizador.data_modificacao_arquivo(self, arquivo)}│')
+            print(
+                f"{Organizador.nome_arquivo(self, arquivo)}{Organizador.tamanho_arquivo(self, arquivo)}{Organizador.data_criacao_arquivo(self, arquivo)} {Organizador.data_modificacao_arquivo(self, arquivo)}{Organizador.tipo_de_arquivo(self, arquivo)}"
+                )
             
         Interface.part_inferior(None, cor = None)
 
@@ -120,4 +129,5 @@ def main():
     Interface.part_inferior(None,cor=AZUL)
     Organizador.organizar(None)
 
-main()
+if __name__ == '__main__':
+    main()
