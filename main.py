@@ -95,8 +95,8 @@ class Organizador:
                 print(f'│ 📄 {Path(arquivo.name).stem[:9]}[..]{Path(arquivo.name).suffix} {1 * " "}│{Organizador.tamanho_arquivo(self, arquivo)}│{Organizador.data_criacao_arquivo(self, arquivo)}│{Organizador.data_modificacao_arquivo(self, arquivo)}│') # diminuir pelo tamanho do suffix maior (valor padrão - valor do suffix maior) - DIFERENÇA
             elif len(arquivo.name) > 9 and len(Path(arquivo.name).suffix) == 4:
                 print(f'│ 📄 {(arquivo.name[:9]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│{Organizador.tamanho_arquivo(self, arquivo)}│{Organizador.data_criacao_arquivo(self, arquivo)}│{Organizador.data_modificacao_arquivo(self, arquivo)}│')
-            elif len(Path(arquivo.name).stem) < 9: # Uso parcial (+4 NÃO funciona em todos os casos) - (SOLUÇÃO: COLOCAR O NOME GRANDE(com espaços) E LIMITAR A [:9])
-                print(f'│ 📄 {Path(arquivo.name[:9]).stem + Path(arquivo.name).suffix} {(len(arquivo.name)+4) * " "}│{Organizador.tamanho_arquivo(self, arquivo)}│{Organizador.data_criacao_arquivo(self, arquivo)}│{Organizador.data_modificacao_arquivo(self, arquivo)}│')
+            elif len(Path(arquivo.name).stem) < 9:
+                print(f'│ 📄 {((arquivo.name) + 25 * " ")[:19]}│{Organizador.tamanho_arquivo(self, arquivo)}│{Organizador.data_criacao_arquivo(self, arquivo)}│{Organizador.data_modificacao_arquivo(self, arquivo)}│')
             
         Interface.part_inferior(None, cor = None)
 
