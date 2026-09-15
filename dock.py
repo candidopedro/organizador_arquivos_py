@@ -34,18 +34,18 @@ class Interface:
     def refesh(self):
         os.system('cls' if os.name == 'nt' else 'clear')
 
-def barra_de_opcoes(self): #Navegar pela seta <- / -> e selecionar com ENTE - Fazer uma list
+def barra_de_opcoes(self):
+    # {Back.BLUE}[1] NOME {Style.RESET_ALL} - sempre atualizar a dock e a organização conforme for selecionando os tipos diferentes de organizaçã
 
-    # {Back.BLUE}[1] NOME {Style.RESET_ALL} - adionar ao conjunto de caracteres no inicio e no fim quando selecionado - sempre atualizar a dock e a organização conforme for selecionando os tipos diferentes de organização
-    
+    tecla = ''
     item_dock = 1
-    while True:
+    while tecla != 'esc':
         
         dock = {1:f'[1] NOME{Style.RESET_ALL}', 2:f'[2] TAMANHO{Style.RESET_ALL}', 3: f'[3] DATA DE CRIAÇÃO{Style.RESET_ALL}', 4:f'[4] DATA DE MODIFICAÇÃO{Style.RESET_ALL}', 5: f'[5] TIPO DE ARQUIVO{Style.RESET_ALL}'}
 
-        for key, value in dock.items():
-            if key == item_dock:
-                dock.update({item_dock: f"{Back.BLUE}{value}{Style.RESET_ALL}"})
+        for chave, valor in dock.items():
+            if chave == item_dock:
+                dock.update({item_dock: f"{Back.BLUE}{valor}{Style.RESET_ALL}"})
 
         Interface.part_superior(self, None)
         for chave, valor in dock.items():
@@ -59,12 +59,13 @@ def barra_de_opcoes(self): #Navegar pela seta <- / -> e selecionar com ENTE - Fa
 
         print('Pressione <- ou ->')
         tecla = keyboard.read_key()
-
+        
         if tecla == 'right' and item_dock < 5:
             item_dock += 1
         elif tecla == 'left' and item_dock > 1:
             item_dock -= 1
-        print(tecla)
 
-        
+        while keyboard.is_pressed(tecla): # Para aguardar a tecla ser pressionada 
+            pass
+            
 barra_de_opcoes(None)
