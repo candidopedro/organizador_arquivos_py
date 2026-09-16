@@ -13,6 +13,9 @@ tamanho_terminal = lambda: os.get_terminal_size().columns  # Função para obter
 
 class Interface:
     # Funções para criar a interface do programa
+    def icon_dock(self):
+        return print(f'{(tamanho_terminal() - 55) * " "}◀ ▶ Navegar{(tamanho_terminal() - 68) * " "}🢒 ESC: Sair 🢐')
+    
     def part_superior(self,cor):
         if cor:
             return print(f'{cor}╭' + '─' * (tamanho_terminal()) + f'╮{RESET}')
@@ -40,7 +43,7 @@ def barra_de_opcoes(self):
     tecla = ''
     item_dock = 1
     while tecla != 'esc':
-        
+        Interface.refesh(self)
         dock = {1:f'[1] NOME{Style.RESET_ALL}', 2:f'[2] TAMANHO{Style.RESET_ALL}', 3: f'[3] DATA DE CRIAÇÃO{Style.RESET_ALL}', 4:f'[4] DATA DE MODIFICAÇÃO{Style.RESET_ALL}', 5: f'[5] TIPO DE ARQUIVO{Style.RESET_ALL}'}
 
         for chave, valor in dock.items():
@@ -56,8 +59,8 @@ def barra_de_opcoes(self):
             else:
                 print(f'{valor} │', end= " ")
         Interface.part_inferior(self, None)
+        Interface.icon_dock(self)
 
-        print('Pressione <- ou ->')
         tecla = keyboard.read_key()
         
         if tecla == 'right' and item_dock < 5:
