@@ -5,14 +5,18 @@
 
 # Usar o Try & Except para especificar os dados não encontrados nos arquivos
 
-import os 
-import datetime
+import os
 import getpass
+import datetime
+import keyboard
 from pathlib import Path
+from colorama import init, Back, Fore, Style
 
 RESET = '\033[0m'
 AZUL = '\033[34m'
 VERDE = "\033[92m"
+
+item_dock = 1
 
 os.get_terminal_size = lambda: os.terminal_size((100, 20))  # Define o tamanho do terminal como 100x20
 tamanho_terminal = lambda: os.get_terminal_size().columns  # Função para obter 
@@ -37,13 +41,46 @@ class Interface:
         elif cor == None:
             return print(f'╰' + '─' * tamanho_terminal() + f'╯')
 
-    def barra_de_opcoes(self): #Navegar pela seta <- / -> e selecionar com ENTER
-        print(f'│{4 * " "}[1] NOME │ [2] TAMANHO │ [3] DATA DE CRIAÇÃO │ [4] DATA DE MODIFICAÇÃO │ [5] TIPO DE ARQUIVO{4 * " "}│')
+    def icon_dock(self):
+        return print(f'{(tamanho_terminal() - 55) * " "}◀ ▶ Navegar{(tamanho_terminal() - 68) * " "}🢒 ESC: Sair 🢐')
 
     def barra_de_organizacao(self):
         Interface.part_superior(None, cor = None)
         print(f'│{AZUL} Nome {RESET}  {(tamanho_terminal()-85) * " "}│{AZUL}  Tamanho  {RESET}│{AZUL}   Data de Criação  {RESET}│{AZUL}  Data de Modificação  {RESET}│{AZUL}  Tipo de Arquivo{2 * " "}{RESET}│')
         Interface.part_central(None, cor = None)
+
+    def dock(self):  #Navegar pela seta <- / ->
+        # {Back.BLUE}[1] NOME {Style.RESET_ALL} - sempre atualizar a dock e a organização conforme for selecionando os tipos diferentes de organizaçã
+        
+        tecla = ''
+        global item_dock
+        dock = {1:f'[1] NOME{Style.RESET_ALL}', 2:f'[2] TAMANHO{Style.RESET_ALL}', 3: f'[3] DATA DE CRIAÇÃO{Style.RESET_ALL}', 4:f'[4] DATA DE MODIFICAÇÃO{Style.RESET_ALL}', 5: f'[5] TIPO DE ARQUIVO{Style.RESET_ALL}'}
+
+        for chave, valor in dock.items():
+            if chave == item_dock:
+                dock.update({item_dock: f"{Back.BLUE}{valor}{Style.RESET_ALL}"})
+
+        Interface.part_superior(self, None)
+        for chave, valor in dock.items():
+            if chave == 1:
+                print(f'│    {valor} │', end= " ")
+            elif chave == 5:
+                print(f'{valor}    │')
+            else:
+                print(f'{valor} │', end= " ")
+        Interface.part_inferior(self, None)
+        Interface.icon_dock(self)
+
+        tecla = keyboard.read_key()
+                
+        if tecla == 'right' and item_dock < 5:
+            item_dock += 1
+        elif tecla == 'left' and item_dock > 1:
+            item_dock -= 1
+
+        while keyboard.is_pressed(tecla): # Para aguardar a tecla ser pressionada 
+            pass
+        return item_dock
 
     def refesh(self):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -109,25 +146,23 @@ class Organizador:
             
         Interface.part_inferior(None, cor = None)
 
-        #BARRA DE OPÇÕES PARA ORGANIZAR OS ARQUIVOS - MAIN
-        Interface.part_superior(None, cor = None)
-        Interface.barra_de_opcoes(None)
-        Interface.part_inferior(None, cor = None)
-        organizar_por = input('Selecione o tipo de organização: ')
-
     def identificar_usuario(self):
         return os.environ.get('USERNAME')
 
 def main():
-    Interface.refesh(None)
-    Interface.part_superior(None,cor=AZUL)
-    print(f'{AZUL}│{(tamanho_terminal()-74) * " "}{VERDE} Bem-vindo ao Organizador de Downloads! - Windows{AZUL}{(tamanho_terminal()-75) * " "}│{RESET}')
+    while True:
+        Interface.part_superior(None,cor=AZUL)
+        print(f'{AZUL}│{(tamanho_terminal()-74) * " "}{VERDE} Bem-vindo ao Organizador de Downloads! - Windows{AZUL}{(tamanho_terminal()-75) * " "}│{RESET}')
 
-    Interface.part_central(None,cor=AZUL)
+        Interface.part_central(None,cor=AZUL)
 
-    print(f'{AZUL}│{(tamanho_terminal()-70)* " "}{RESET}📂 C: > Users > {Organizador.identificar_usuario(None)} > Downloads{(tamanho_terminal()-72)* " "}{AZUL}│{RESET}')
-    Interface.part_inferior(None,cor=AZUL)
-    Organizador.organizar(None)
+        print(f'{AZUL}│{(tamanho_terminal()-70)* " "}{RESET}📂 C: > Users > {Organizador.identificar_usuario(None)} > Downloads{(tamanho_terminal()-72)* " "}{AZUL}│{RESET}')
+        Interface.part_inferior(None,cor=AZUL)
+        Organizador.organizar(None)
+
+        #BARRA DE OPÇÕES PARA ORGANIZAR OS ARQUIVOS - MAIN
+        tipo_de_organizacao = Interface.dock(None)
+        Interface.refesh(None)
 
 if __name__ == '__main__':
     main()
