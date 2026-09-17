@@ -1,9 +1,6 @@
-# ORGANIZADOR DE DOWNLOADS = Windows
-# Fazer por último, o ajuste de tamanho automatico da interface, de acordo com o tamanho do nome do usuário & Nome do maior arquivo da pasta de downloads
-
-# - Limitar quantidade de caracteres no nome do arquivo, mantendo o nome da extensão do arquivo
-
 # Usar o Try & Except para especificar os dados não encontrados nos arquivos
+ 
+from file_type import emoji_arquivo
 
 import os
 import getpass
@@ -42,7 +39,7 @@ class Interface:
             return print(f'╰' + '─' * tamanho_terminal() + f'╯')
 
     def icon_dock(self):
-        return print(f'{(tamanho_terminal() - 55) * " "}◀ ▶ Navegar{(tamanho_terminal() - 68) * " "}🢒 ESC: Sair 🢐')
+        return print(f'{1 * " "}◀ ▶ Navegar{(tamanho_terminal() - 23) * " "}🢒 ESC: Sair 🢐')
 
     def barra_de_organizacao(self):
         Interface.part_superior(None, cor = None)
@@ -92,13 +89,13 @@ class Organizador:
     # Nome
     def nome_arquivo(self, arquivo):
         if len(Path(arquivo.name).stem) > 9 and len(Path(arquivo.name).suffix) > 4:
-            return (f'│ 📄 {(Path(arquivo.name).stem)[:(13-len(Path(arquivo.name).suffix))] + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
+            return (f'│ {emoji_arquivo(Path(arquivo.name))}  {(Path(arquivo.name).stem)[:(13-len(Path(arquivo.name).suffix))] + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
         elif len(arquivo.name) == 9 and len(Path(arquivo.name).suffix) == 4:
-            return (f'│ 📄 {Path(arquivo.name).stem[:9]}[..]{Path(arquivo.name).suffix} {1 * " "}│') # diminuir pelo tamanho do suffix maior (valor padrão - valor do suffix maior) - DIFERENÇA
+            return (f'│ {emoji_arquivo(Path(arquivo.name))}  {Path(arquivo.name).stem[:9]}[..]{Path(arquivo.name).suffix} {1 * " "}│') # diminuir pelo tamanho do suffix maior (valor padrão - valor do suffix maior) - DIFERENÇA
         elif len(arquivo.name) > 9 and len(Path(arquivo.name).suffix) == 4:
-            return (f'│ 📄 {(arquivo.name[:9]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
+            return (f'│ {emoji_arquivo(Path(arquivo.name))}  {(arquivo.name[:9]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
         else:
-           return (f'│ 📄 {((arquivo.name) + 25 * " ")[:19]}│')
+           return (f'│ {emoji_arquivo(Path(arquivo.name))}  {((arquivo.name) + 25 * " ")[:19]}│')
 
     # Tamanho   
     def tamanho_arquivo(self, arquivo): # TAMANHO - MB & GB (até o momento..)
@@ -148,6 +145,9 @@ class Organizador:
 
     def identificar_usuario(self):
         return os.environ.get('USERNAME')
+
+class Organizador_realtime: # Onde será feita a organização conforme o usuário for transitando pelas opções na dock - tudo em tempo real. Para destacar que determinada coluna foi alterada será alterado o backgrando somente da coluna selecionada
+    pass
 
 def main():
     while True:
