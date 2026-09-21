@@ -1,6 +1,4 @@
 # Usar o Try & Except para especificar os dados não encontrados nos arquivos
- 
-from file_type import emoji_arquivo
 
 import os
 import getpass
@@ -145,9 +143,6 @@ class Organizador:
 
     def identificar_usuario(self):
         return os.environ.get('USERNAME')
-
-class Organizador_realtime: # Onde será feita a organização conforme o usuário for transitando pelas opções na dock - tudo em tempo real. Para destacar que determinada coluna foi alterada será alterado o backgrando somente da coluna selecionada
-    pass
 
 def main():
     while True:

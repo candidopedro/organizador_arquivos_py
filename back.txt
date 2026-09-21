@@ -1,0 +1,4 @@
+
+Para deixar a deterninado item com o fundo azul caso o valor da variavel for igual ->
+
+return (f'│ {Back.BLUE if item_dock == 1 else ''}📄 {(Path(arquivo.name).stem)[:(13-len(Path(arquivo.name).suffix))] + "[..]" + Path(arquivo.name).suffix}{Style.RESET_ALL if item_dock == 1 else ''} {1 * " "}│')
