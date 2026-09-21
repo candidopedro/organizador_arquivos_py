@@ -89,13 +89,13 @@ class Organizador:
     # Nome
     def nome_arquivo(self, arquivo):
         if len(Path(arquivo.name).stem) > 9 and len(Path(arquivo.name).suffix) > 4:
-            return (f'│ {emoji_arquivo(Path(arquivo.name))}  {(Path(arquivo.name).stem)[:(13-len(Path(arquivo.name).suffix))] + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
+            return (f'│ 📄 {(Path(arquivo.name).stem)[:(13-len(Path(arquivo.name).suffix))] + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
         elif len(arquivo.name) == 9 and len(Path(arquivo.name).suffix) == 4:
-            return (f'│ {emoji_arquivo(Path(arquivo.name))}  {Path(arquivo.name).stem[:9]}[..]{Path(arquivo.name).suffix} {1 * " "}│') # diminuir pelo tamanho do suffix maior (valor padrão - valor do suffix maior) - DIFERENÇA
+            return (f'│ 📄 {Path(arquivo.name).stem[:9]}[..]{Path(arquivo.name).suffix} {1 * " "}│') # diminuir pelo tamanho do suffix maior (valor padrão - valor do suffix maior) - DIFERENÇA
         elif len(arquivo.name) > 9 and len(Path(arquivo.name).suffix) == 4:
-            return (f'│ {emoji_arquivo(Path(arquivo.name))}  {(arquivo.name[:9]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
+            return (f'│ 📄 {(arquivo.name[:9]) + "[..]" + Path(arquivo.name).suffix} {1 * " "}│')
         else:
-           return (f'│ {emoji_arquivo(Path(arquivo.name))}  {((arquivo.name) + 25 * " ")[:19]}│')
+           return (f'│ 📄 {((arquivo.name) + 25 * " ")[:19]}│')
 
     # Tamanho   
     def tamanho_arquivo(self, arquivo): # TAMANHO - MB & GB (até o momento..)
